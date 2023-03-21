@@ -157,3 +157,14 @@ Exemplo de resposta:
 ```
 
 
+## Consulta de cotação de Bitcoin
+
+Algumas funcionalidades da API de compra e venda de Bitcoin dependem da cotação atual da criptomoeda em relação ao Real (BRL). Para obter essa informação, a API utiliza a Exchange Rates API fornecida pela Blockchain.com.
+
+A consulta à Exchange Rates API é feita internamente pela API de compra e venda de Bitcoin, portanto, não é necessário que o cliente faça chamadas adicionais à API da Blockchain.com.
+
+Exemplo de requisição:
+```
+GET https://blockchain.info/tobtc?currency=BRL&value=1000
+```
+Nesse exemplo, a cotação do Bitcoin em relação ao Real é consultada para o valor de R$ 1.000,00 (mil reais). O valor de retorno é um número decimal que representa a quantidade de Bitcoin equivalente ao valor informado em reais.
