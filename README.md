@@ -1,10 +1,10 @@
-# BE-JV-007-projeto-final
-# Documentação da API de Compra e Venda de Bitcoins
+### BE-JV-007-projeto-final
+# API de Compra e Venda de Bitcoins
 
 ## Visão geral
-A API permite que usuários realizem transações de compra e venda de Bitcoins a partir da moeda local(BRL) e acessem informações sobre seu portfólio. A API requer autenticação por usuário e senha para acessar todas as funcionalidades.
+A API permite que usuários realizem transações de compra e venda de Bitcoins a partir da moeda local (BRL) e acessem informações sobre seu portfólio. A API requer autenticação por usuário e senha para acessar todas as funcionalidades.
 
-## A API suporta as seguintes operações:
+## Operações suportadas
 
 - Login
 - Registro
@@ -15,7 +15,6 @@ A API permite que usuários realizem transações de compra e venda de Bitcoins 
 
 
 ## Endpoints
-A seguir, uma descrição de cada endpoint da API:
 
 ### - Login
 Endpoint: `POST /login`
