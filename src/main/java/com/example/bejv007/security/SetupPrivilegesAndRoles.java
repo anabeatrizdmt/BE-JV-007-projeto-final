@@ -5,7 +5,7 @@ import com.example.bejv007.user.entities.RoleEntity;
 import com.example.bejv007.user.UserModel;
 import com.example.bejv007.user.repositories.PrivilegeRepository;
 import com.example.bejv007.user.repositories.RoleRepository;
-import com.example.bejv007.user.repositories.UserRepository;
+import com.example.bejv007.user.repositories.UserJpaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
@@ -24,7 +24,7 @@ public class SetupPrivilegesAndRoles implements ApplicationListener<ContextRefre
 
     boolean alreadySetup = false;
 
-    private final UserRepository userRepository;
+    private final UserJpaRepository userJpaRepository;
     private final RoleRepository roleRepository;
     private final PrivilegeRepository privilegeRepository;
     private final PasswordEncoder passwordEncoder;
@@ -54,7 +54,7 @@ public class SetupPrivilegesAndRoles implements ApplicationListener<ContextRefre
         user.setEmail("test@test.com");
         user.setRoles(Collections.singletonList(adminRole));
         user.setEnabled(true);
-        userRepository.save(user);
+        userJpaRepository.save(user);
 
         alreadySetup = true;
 
