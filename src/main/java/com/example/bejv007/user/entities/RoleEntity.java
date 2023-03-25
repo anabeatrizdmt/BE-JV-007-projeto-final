@@ -1,5 +1,6 @@
 package com.example.bejv007.user.entities;
 
+import com.example.bejv007.user.UserModel;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,7 +17,7 @@ public class RoleEntity {
 
     private String name;
     @ManyToMany(mappedBy = "roles")
-    private Collection<UserEntity> users;
+    private Collection<UserModel> users;
 
     public RoleEntity(String name) {
         this.name = name;

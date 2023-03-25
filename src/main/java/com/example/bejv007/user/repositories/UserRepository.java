@@ -1,11 +1,14 @@
 package com.example.bejv007.user.repositories;
 
-import com.example.bejv007.user.entities.UserEntity;
+import com.example.bejv007.user.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface UserRepository extends JpaRepository<UserEntity,Long> {
+import java.util.Optional;
 
+@Repository
+public interface UserRepository extends JpaRepository<UserModel,Long> {
+
+    Optional<UserModel> findByEmail(String email);
 
 }

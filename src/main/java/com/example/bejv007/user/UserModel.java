@@ -1,5 +1,6 @@
-package com.example.bejv007.user.entities;
+package com.example.bejv007.user;
 
+import com.example.bejv007.user.entities.RoleEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,17 +10,23 @@ import java.util.Collection;
 @Getter @Setter @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserEntity {
+public class UserModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private String name;
     private String email;
     private String password;
     private boolean enabled;
     private boolean tokenExpired;
+
+    public UserModel(String name, String email, String password) {
+    }
+
+    public static UserModel from(UserRequest userRequest) {
+        return new UserModel(userRequest.getName(), userRequest.getEmail(), userRequest.getPassword());
+    }
 
     @ManyToMany
     @JoinTable(

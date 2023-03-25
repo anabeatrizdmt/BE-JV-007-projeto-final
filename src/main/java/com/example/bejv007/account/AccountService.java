@@ -1,6 +1,7 @@
 package com.example.bejv007.account;
 
 import com.example.bejv007.blockchain.BlockchainService;
+import com.example.bejv007.user.UserModel;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
