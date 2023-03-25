@@ -1,24 +1,20 @@
 package com.example.bejv007.user;
 
-import com.example.bejv007.account.AccountModel;
+import com.example.bejv007.user.repositories.UserJpaRepository;
 import com.example.bejv007.user.repositories.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
-
+@RequestMapping("/users")
 public class UserService {
 
     private final UserRepository repository;
 
-    public UserService(UserRepository repository) {
+    public UserService(UserRepository repository, UserJpaRepository userJpaRepository) {
         this.repository = repository;
+        this.userJpaRepository = userJpaRepository;
     }
 
     @PostMapping
@@ -32,5 +28,11 @@ public class UserService {
         UserModel userModel = this.repository.save(UserModel.from(userRequest));
         return new UserDTO(userModel);
     }
+    private final UserJpaRepository userJpaRepository;
 
+    @GetMapping("/{id}")
+    public Optional<UserModel> findById (@PathVariable("id") Long id) {
+
+        return this.userJpaRepository.findById(id);
+    }
 }
