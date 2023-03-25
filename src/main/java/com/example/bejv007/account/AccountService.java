@@ -1,6 +1,7 @@
 package com.example.bejv007.account;
 
 import com.example.bejv007.blockchain.BlockchainService;
+import com.example.bejv007.user.entities.UserEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,7 +16,7 @@ public class AccountService {
         this.blockchainService = blockchainService;
     }
 
-    public AccountModel createAccount(UserModel newUser) {
+    public AccountModel createAccount(UserEntity newUser) {
        AccountModel newAccount = new AccountModel();
        newAccount.setBrlBalance(BigDecimal.ZERO);
        newAccount.setBtcBalance(BigDecimal.ZERO);
@@ -23,7 +24,7 @@ public class AccountService {
        return repository.save(newAccount);
     }
 
-    public Long findAccountIdByUser(UserModel user) {
+    public Long findAccountIdByUser(UserEntity user) {
         return repository.findByUser(user).getId();
     }
 
