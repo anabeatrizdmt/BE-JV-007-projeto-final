@@ -55,6 +55,7 @@ public class AccountService {
         if (account.getBrlBalance().equals(BigDecimal.ZERO) &&
             account.getBtcBalance().equals(BigDecimal.ZERO)) {
 
+            // TODO: Also delete user
             repository.deleteById(id);
             return true;
         }
