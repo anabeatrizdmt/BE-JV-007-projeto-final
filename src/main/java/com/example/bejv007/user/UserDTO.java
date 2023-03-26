@@ -1,9 +1,26 @@
 package com.example.bejv007.user;
 
-public record UserDTO(String name, String email) {
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
+import lombok.*;
 
-    public UserDTO(UserModel userModel) {
-        this(userModel.getName() , userModel.getEmail());
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+
+public class UserDTO {
+
+    private String name;
+
+    private String email;
+
+    private String password;
+
+    public static UserDTO from(UserRequest userRequest) {
+        return new UserDTO(userRequest.getName(), userRequest.getEmail(), userRequest.getPassword());
     }
 
+
 }
+

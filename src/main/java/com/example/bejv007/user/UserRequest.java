@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+
 public class UserRequest {
 
     @Pattern(regexp = "[\\w\\p{L}.]{5,20}")

@@ -3,10 +3,13 @@ package com.example.bejv007.user;
 import com.example.bejv007.account.AccountModel;
 import com.example.bejv007.account.AccountRepository;
 import com.example.bejv007.account.AccountService;
+import com.example.bejv007.user.exceptions.EmailDontExistException;
 import com.example.bejv007.user.repositories.UserJpaRepository;
+import com.example.bejv007.user.services.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -18,26 +21,33 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserRestController {
 
-    private final UserJpaRepository repository;
+    private final UserServiceImpl userService;
     private final AccountService accountService;
     private final AccountRepository accountRepository;
+    private final UserJpaRepository repository;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO createUser(@RequestBody @Valid UserRequest userRequest) throws Exception {
-        Optional<UserModel> optionalUserModel = this.repository.findByEmail(userRequest.getEmail());
-        if (optionalUserModel.isPresent()) {
-            throw new Exception("E-mail já cadastrado");
-        }
-        UserModel userModel = this.repository.save(UserModel.from(userRequest));
-        accountService.createAccount(userModel);
-        return new UserDTO(userModel);
+    public ResponseEntity<UserModel> createUser(@RequestBody @Valid UserRequest userRequest) throws Exception {
+        return new ResponseEntity<>(userService.saveUser(UserDTO.from(userRequest)),HttpStatus.CREATED );
     }
 
     @GetMapping("/{id}")
     public Optional<UserModel> findById (@PathVariable("id") Long id) {
 
-        return this.repository.findById(id);
+        return null;
+    }
+
+    @GetMapping ("/{email}")
+    public UserResponse findByEmail(@PathVariable String email) throws EmailDontExistException {
+        var x = UserJpaRepository;
+        Optional<UserModel> optionalUserModel = this.repository.findByEmail(email);
+        if (optionalUserModel.isPresent()) {
+            throw new EmailDontExistException();
+        }
+        UserResponse userResponse = UserModel.userModelToUserResponse(optionalUserModel.get());
+        return userResponse;
+
+
     }
 
     @DeleteMapping("/{id}")
