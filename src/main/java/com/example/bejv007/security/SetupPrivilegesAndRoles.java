@@ -2,7 +2,7 @@
 //
 //import com.example.bejv007.user.entities.PrivilegeEntity;
 //import com.example.bejv007.user.entities.RoleEntity;
-//import com.example.bejv007.user.entities.UserEntity;
+//import com.example.bejv007.user.entities.UserModel;
 //import com.example.bejv007.user.repositories.PrivilegeRepository;
 //import com.example.bejv007.user.repositories.RoleRepository;
 //import com.example.bejv007.user.repositories.UserRepository;
@@ -48,7 +48,7 @@
 //        createRoleIfNotFound("ROLE_USER", Arrays.asList(userPrivilege));
 //
 //        RoleEntity adminRole = roleRepository.findByName("ROLE_ADMIN");
-//        UserEntity user = new UserEntity();
+//        UserModel user = new UserModel();
 //        user.setName("Test");
 //        user.setPassword(passwordEncoder.encode("test"));
 //        user.setEmail("test@test.com");
