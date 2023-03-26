@@ -21,7 +21,10 @@ public class UserModel {
     private boolean enabled;
     private boolean tokenExpired;
 
-    public UserModel(String name, String email, String password) {
+    public UserModel(String username, String email, String password) {
+        this.name = username;
+        this.email = email;
+        this.password = password;
     }
 
     public static UserModel from(UserRequest userRequest) {
