@@ -1,13 +1,17 @@
 package com.example.bejv007.user.services.impl;
 
+import com.example.bejv007.account.AccountModel;
+import com.example.bejv007.account.AccountRepository;
 import com.example.bejv007.account.AccountService;
 import com.example.bejv007.user.UserDTO;
 import com.example.bejv007.user.UserModel;
+import com.example.bejv007.user.exceptions.IdNotFoundException;
 import com.example.bejv007.user.repositories.UserJpaRepository;
 import com.example.bejv007.user.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +20,8 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserJpaRepository repository;
     private final AccountService accountService;
+
+    private final AccountRepository accountRepository;
     @Override
     public List<UserModel> findAll() {
         return null;
@@ -27,16 +33,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserModel findById() {
-        return null;
+    public UserDTO findById(Long id) throws IdNotFoundException {
+       UserModel userFound = repository.findById(id).orElseThrow(IdNotFoundException::new);
+       return UserDTO.userModelToUserDto(userFound);
     }
 
 
-    @Override
-    public Optional<UserModel> findById(Long id) {
-
-        return null;
-    }
 
     @Override
     public UserModel saveUser(UserDTO userDTO) throws Exception {
@@ -50,7 +52,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserModel deleteUser() {
-        return null;
+    public void deleteUser(Long id) throws Exception {
+        Optional<UserModel> optionalUserModel = this.repository.findById(id);
+        if (optionalUserModel.isEmpty()) {
+            throw new Exception("Usuário não encontrado");
+        }
+        AccountModel accountModel = accountRepository.findByUser(optionalUserModel);
+
+        Long userAccountId = accountService.findAccountIdByUser(optionalUserModel);
+
+        BigDecimal totalBalanceInBtc = accountModel.getBtcBalance();
+        BigDecimal totalBalanceInBrl = accountModel.getBrlBalance();
+        if (totalBalanceInBtc.compareTo(BigDecimal.ZERO) != 0 || totalBalanceInBrl.compareTo(BigDecimal.ZERO) != 0) {
+            throw new Exception("A conta do usuário tem saldos disponível. Por favor, vender e/ou sacar os reais para poder encerrar a conta.");
+        }
+
+        accountRepository.delete(accountModel);
+
+        UserModel userModel = optionalUserModel.orElseThrow(() -> new RuntimeException("User not found"));
+        this.repository.delete(userModel);
     }
 }

@@ -20,6 +20,9 @@ public class UserDTO {
     public static UserDTO from(UserRequest userRequest) {
         return new UserDTO(userRequest.getName(), userRequest.getEmail(), userRequest.getPassword());
     }
+    public static UserDTO userModelToUserDto (UserModel userModel){
+        return new UserDTO(userModel.getName(), userModel.getEmail(), userModel.getPassword());
+    }
 
 
 }
