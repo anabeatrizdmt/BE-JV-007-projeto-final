@@ -38,16 +38,21 @@ public class UserRestController {
         return UserResponse.from(userDTO);
     }
 
-    @GetMapping ("/{email}")
+    @GetMapping ("/searchemail/{email}")
     public UserResponse findByEmail(@PathVariable String email) throws EmailDontExistException {
         Optional<UserModel> optionalUserModel = this.repository.findByEmail(email);
-        if (optionalUserModel.isPresent()) {
+        if (!optionalUserModel.isPresent()) {
             throw new EmailDontExistException();
         }
         UserResponse userResponse = UserModel.userModelToUserResponse(optionalUserModel.get());
         return userResponse;
+    }
 
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<UserModel> updateUser(@PathVariable("id") Long id, @RequestBody @Valid UserRequest userRequest) throws Exception {
+        UserDTO userDTO = UserDTO.from(userRequest);
 
+        return new ResponseEntity<>(userService.editUser(id, userDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

@@ -23,6 +23,8 @@ public interface UserService {
 
     public UserModel saveUser(UserDTO userDTO) throws Exception;
 
+    public UserModel editUser(Long id, UserDTO userDTO) throws Exception;
+
     public void deleteUser(Long id) throws Exception;
 
 

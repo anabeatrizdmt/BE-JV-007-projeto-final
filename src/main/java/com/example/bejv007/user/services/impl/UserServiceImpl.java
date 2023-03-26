@@ -52,6 +52,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserModel editUser(Long id, UserDTO userDTO) throws Exception {
+        Optional<UserModel> optionalUserModel = repository.findById(id);
+        if (!optionalUserModel.isPresent()) {
+            throw new Exception("Usuário não existe");
+        }
+        UserModel userModel = optionalUserModel.get();
+
+        userModel.setName(userDTO.getName());
+        userModel.setEmail(userDTO.getEmail());
+        userModel.setPassword(userDTO.getPassword());
+
+        UserModel UpdatedUserModel = this.repository.save(userModel);
+
+        return UpdatedUserModel;
+    }
+
+    @Override
     public void deleteUser(Long id) throws Exception {
         Optional<UserModel> optionalUserModel = this.repository.findById(id);
         if (optionalUserModel.isEmpty()) {
