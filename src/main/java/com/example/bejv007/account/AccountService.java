@@ -5,6 +5,7 @@ import com.example.bejv007.user.UserModel;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Service
 public class AccountService {
@@ -24,7 +25,7 @@ public class AccountService {
        return repository.save(newAccount);
     }
 
-    public Long findAccountIdByUser(UserModel user) {
+    public Long findAccountIdByUser(Optional<UserModel> user) {
         return repository.findByUser(user).getId();
     }
 
