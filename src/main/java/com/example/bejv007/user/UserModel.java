@@ -27,8 +27,12 @@ public class UserModel {
         this.password = password;
     }
 
-    public static UserModel from(UserRequest userRequest) {
-        return new UserModel(userRequest.getName(), userRequest.getEmail(), userRequest.getPassword());
+    public static UserModel from(UserDTO userDTO) {
+        return new UserModel(userDTO.getName(), userDTO.getEmail(), userDTO.getPassword());
+    }
+
+    public static UserResponse userModelToUserResponse(UserModel userModel){
+        return new UserResponse(userModel.getName(), userModel.getEmail());
     }
 
     @ManyToMany
