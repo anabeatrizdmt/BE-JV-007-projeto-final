@@ -9,6 +9,7 @@ import com.example.bejv007.user.exceptions.IdNotFoundException;
 import com.example.bejv007.user.repositories.UserJpaRepository;
 import com.example.bejv007.user.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,8 +21,11 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserJpaRepository repository;
     private final AccountService accountService;
-
     private final AccountRepository accountRepository;
+
+    private BCryptPasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
     @Override
     public List<UserModel> findAll() {
         return null;
@@ -47,6 +51,7 @@ public class UserServiceImpl implements UserService {
             throw new Exception("E-mail já cadastrado");
         }
         UserModel userModel = this.repository.save(UserModel.from(userDTO));
+        userModel.setPassword(passwordEncoder().encode(userModel.getPassword()));
         accountService.createAccount(userModel);
         return userModel;
     }

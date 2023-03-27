@@ -1,11 +1,11 @@
 //package com.example.bejv007.security;
 //
+//import com.example.bejv007.user.UserModel;
 //import com.example.bejv007.user.entities.PrivilegeEntity;
 //import com.example.bejv007.user.entities.RoleEntity;
-//import com.example.bejv007.user.entities.UserModel;
 //import com.example.bejv007.user.repositories.PrivilegeRepository;
 //import com.example.bejv007.user.repositories.RoleRepository;
-//import com.example.bejv007.user.repositories.UserRepository;
+//import com.example.bejv007.user.repositories.UserJpaRepository;
 //import jakarta.transaction.Transactional;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.context.ApplicationListener;
@@ -24,7 +24,7 @@
 //
 //    boolean alreadySetup = false;
 //
-//    private final UserRepository userRepository;
+//    private final UserJpaRepository userRepository;
 //    private final RoleRepository roleRepository;
 //    private final PrivilegeRepository privilegeRepository;
 //    private final PasswordEncoder passwordEncoder;
