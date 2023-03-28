@@ -3,11 +3,11 @@ package com.example.bejv007.user.services.impl;
 import com.example.bejv007.account.AccountModel;
 import com.example.bejv007.account.AccountRepository;
 import com.example.bejv007.account.AccountService;
-import com.example.bejv007.user.UserDTO;
+import com.example.bejv007.user.dto.UserDTO;
 import com.example.bejv007.user.UserModel;
 import com.example.bejv007.user.exceptions.IdNotFoundException;
 import com.example.bejv007.user.repositories.UserJpaRepository;
-import com.example.bejv007.user.services.UserService;
+import com.example.bejv007.user.services.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements IUserService {
     private final UserJpaRepository repository;
     private final AccountService accountService;
     private final AccountRepository accountRepository;
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
         }
         UserModel userModel = optionalUserModel.get();
 
-        userModel.setName(userDTO.getName());
+        userModel.setUsername(userDTO.getUsername());
         userModel.setEmail(userDTO.getEmail());
         userModel.setPassword(userDTO.getPassword());
 

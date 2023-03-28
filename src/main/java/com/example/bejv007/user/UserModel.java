@@ -1,5 +1,6 @@
 package com.example.bejv007.user;
 
+import com.example.bejv007.user.dto.UserDTO;
 import com.example.bejv007.user.entities.RoleEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,14 +16,14 @@ public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String name;
+    private String username;
     private String email;
     private String password;
     private boolean enabled;
     private boolean tokenExpired;
 
     public UserModel(String username, String email, String password) {
-        this.name = username;
+        this.username = username;
         this.email = email;
         this.password = password;
     }
@@ -32,7 +33,7 @@ public class UserModel {
     }
 
     public static UserResponse userModelToUserResponse(UserModel userModel){
-        return new UserResponse(userModel.getName(), userModel.getEmail());
+        return new UserResponse(userModel.getUsername(), userModel.getEmail());
     }
 
     @ManyToMany
