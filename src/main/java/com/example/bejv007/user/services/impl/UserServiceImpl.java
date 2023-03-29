@@ -100,4 +100,11 @@ public class UserServiceImpl implements UserService {
             return accountService.getTotalBalanceInBrlById(accountId);
         throw new RuntimeException("Currency not supported.");
     }
+
+    @Override
+    public void transactBtc(Long id, BigDecimal quantity) {
+        Optional<UserModel> user = repository.findById(id);
+        Long accountId = accountService.findAccountIdByUser(user);
+        accountService.transactBtc(accountId, quantity);
+    }
 }

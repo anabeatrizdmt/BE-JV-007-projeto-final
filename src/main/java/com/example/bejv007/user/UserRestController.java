@@ -63,4 +63,10 @@ public class UserRestController {
     public BigDecimal getBalance(@PathVariable Long id, @RequestParam String currency) {
         return userService.getBalance(id, currency);
     }
+
+    @PostMapping("/{id}/btc")
+    @ResponseStatus(HttpStatus.OK)
+    public void transactBtc(@PathVariable Long id, @RequestBody Double quantity) {
+        userService.transactBtc(id, BigDecimal.valueOf(quantity));
+    }
 }
