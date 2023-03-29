@@ -28,6 +28,9 @@ public interface UserService {
     public void deleteUser(Long id) throws Exception;
 
 
+    BigDecimal getBalance(Long id, String currency);
 
+    void transactBtc(Long id, BigDecimal quantity);
 
+    void performBrlOperation(Long id, BigDecimal value);
 }
