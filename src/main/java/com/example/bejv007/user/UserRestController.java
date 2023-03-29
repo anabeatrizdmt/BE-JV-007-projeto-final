@@ -23,8 +23,6 @@ import java.util.Optional;
 public class UserRestController {
 
     private final UserServiceImpl userService;
-    private final AccountService accountService;
-    private final AccountRepository accountRepository;
     private final UserJpaRepository repository;
 
     @PostMapping
@@ -59,5 +57,10 @@ public class UserRestController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void deleteUserById(@PathVariable("id") Long id) throws Exception {
         userService.deleteUser(id);
+    }
+
+    @GetMapping(value = "/{id}", params = "currency")
+    public BigDecimal getBalance(@PathVariable Long id, @RequestParam String currency) {
+        return userService.getBalance(id, currency);
     }
 }

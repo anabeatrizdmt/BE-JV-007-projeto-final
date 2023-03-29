@@ -89,4 +89,15 @@ public class UserServiceImpl implements UserService {
         UserModel userModel = optionalUserModel.orElseThrow(() -> new RuntimeException("User not found"));
         this.repository.delete(userModel);
     }
+
+    @Override
+    public BigDecimal getBalance(Long id, String currency) {
+        Optional<UserModel> user = repository.findById(id);
+        Long accountId = accountService.findAccountIdByUser(user);
+        if (currency.equalsIgnoreCase("btc"))
+            return accountService.getTotalBalanceInBtcById(accountId);
+        if (currency.equalsIgnoreCase("brl"))
+            return accountService.getTotalBalanceInBrlById(accountId);
+        throw new RuntimeException("Currency not supported.");
+    }
 }

@@ -28,6 +28,5 @@ public interface UserService {
     public void deleteUser(Long id) throws Exception;
 
 
-
-
+    BigDecimal getBalance(Long id, String currency);
 }
