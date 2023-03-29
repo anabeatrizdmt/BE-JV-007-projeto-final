@@ -18,7 +18,7 @@ import java.util.function.Function;
 @Service
 public class JwtServiceImpl implements IJwtService {
 
-    private final String SECRET = "senhatoken";
+    private final String SECRET = "H9Q1196MQE0YAQG4GKMO";
 
     private Key getSignKInkey(){
         return Keys.hmacShaKeyFor(Base64.getEncoder().encode(SECRET.getBytes()));
