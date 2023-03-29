@@ -31,4 +31,6 @@ public interface UserService {
     BigDecimal getBalance(Long id, String currency);
 
     void transactBtc(Long id, BigDecimal quantity);
+
+    void performBrlOperation(Long id, BigDecimal value);
 }

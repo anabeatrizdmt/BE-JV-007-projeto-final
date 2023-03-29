@@ -107,4 +107,11 @@ public class UserServiceImpl implements UserService {
         Long accountId = accountService.findAccountIdByUser(user);
         accountService.transactBtc(accountId, quantity);
     }
+
+    @Override
+    public void performBrlOperation(Long id, BigDecimal value) {
+        Optional<UserModel> user = repository.findById(id);
+        Long accountId = accountService.findAccountIdByUser(user);
+        accountService.performBrlOperation(accountId, value);
+    }
 }

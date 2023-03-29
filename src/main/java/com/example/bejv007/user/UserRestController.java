@@ -69,4 +69,10 @@ public class UserRestController {
     public void transactBtc(@PathVariable Long id, @RequestBody Double quantity) {
         userService.transactBtc(id, BigDecimal.valueOf(quantity));
     }
+
+    @PostMapping("/{id}/brl")
+    @ResponseStatus(HttpStatus.OK)
+    public void performBrlOperation(@PathVariable Long id, @RequestBody Double value) {
+        userService.performBrlOperation(id, BigDecimal.valueOf(value));
+    }
 }
