@@ -49,8 +49,16 @@ public class UserRestController {
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<UserModel> updateUser(@PathVariable("id") Long id, @RequestBody @Valid UserRequest userRequest) throws Exception {
-        UserDTO userDTO = UserDTO.from(userRequest);
+    public ResponseEntity<UserModel> updateUser(
+            @PathVariable("id") Long id,
+            @RequestParam("nome") Optional<String> nome,
+            @RequestParam("email") Optional<String> email,
+            @RequestParam("password") Optional<String> password) throws Exception {
+
+        UserDTO userDTO = new UserDTO();
+        nome.ifPresent(userDTO::setName);
+        email.ifPresent(userDTO::setEmail);
+        password.ifPresent(userDTO::setPassword);
 
         return new ResponseEntity<>(userService.editUser(id, userDTO), HttpStatus.OK);
     }

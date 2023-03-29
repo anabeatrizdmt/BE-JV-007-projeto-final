@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -58,10 +59,9 @@ public class UserServiceImpl implements UserService {
             throw new Exception("Usuário não existe");
         }
         UserModel userModel = optionalUserModel.get();
-
-        userModel.setName(userDTO.getName());
-        userModel.setEmail(userDTO.getEmail());
-        userModel.setPassword(userDTO.getPassword());
+        if (!Objects.equals(userModel.getName(), userDTO.getName()) && userDTO.getName() != null) userModel.setName(userDTO.getName());
+        if (!Objects.equals(userModel.getEmail(), userDTO.getEmail()) && userDTO.getEmail() != null) userModel.setEmail(userDTO.getEmail());
+        if (!Objects.equals(userModel.getPassword(), userDTO.getPassword()) && userDTO.getPassword() != null) userModel.setPassword(userDTO.getPassword());
 
         UserModel UpdatedUserModel = this.repository.save(userModel);
 
