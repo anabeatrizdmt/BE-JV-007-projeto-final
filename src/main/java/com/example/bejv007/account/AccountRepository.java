@@ -11,6 +11,10 @@ import java.math.BigDecimal;
 
 @Repository
 public interface AccountRepository extends JpaRepository<AccountModel, Long> {
+<<<<<<< HEAD
+    public AccountModel findByUser(UserModel user);
+=======
     AccountModel findByUser(UserModel user);
 
+>>>>>>> 449cbe0976234a9a55f2b908ba3b286e10623d82
 }

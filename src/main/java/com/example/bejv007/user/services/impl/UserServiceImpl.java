@@ -3,12 +3,13 @@ package com.example.bejv007.user.services.impl;
 import com.example.bejv007.account.AccountModel;
 import com.example.bejv007.account.AccountRepository;
 import com.example.bejv007.account.AccountService;
-import com.example.bejv007.user.UserDTO;
+import com.example.bejv007.user.dto.UserDTO;
 import com.example.bejv007.user.UserModel;
 import com.example.bejv007.user.exceptions.IdNotFoundException;
 import com.example.bejv007.user.repositories.UserJpaRepository;
-import com.example.bejv007.user.services.UserService;
+import com.example.bejv007.user.services.IUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,11 +19,14 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements IUserService {
     private final UserJpaRepository repository;
     private final AccountService accountService;
-
     private final AccountRepository accountRepository;
+
+    private BCryptPasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
     @Override
     public List<UserModel> findAll() {
         return null;
@@ -48,6 +52,7 @@ public class UserServiceImpl implements UserService {
             throw new Exception("E-mail já cadastrado");
         }
         UserModel userModel = this.repository.save(UserModel.from(userDTO));
+        userModel.setPassword(passwordEncoder().encode(userModel.getPassword()));
         accountService.createAccount(userModel);
         return userModel;
     }
@@ -59,7 +64,8 @@ public class UserServiceImpl implements UserService {
             throw new Exception("Usuário não existe");
         }
         UserModel userModel = optionalUserModel.get();
-        if (!Objects.equals(userModel.getName(), userDTO.getName()) && userDTO.getName() != null) userModel.setName(userDTO.getName());
+
+        if (!Objects.equals(userModel.getUsername(), userDTO.getUsername()) && userDTO.getUsername() != null) userModel.setUsername(userDTO.getUsername());
         if (!Objects.equals(userModel.getEmail(), userDTO.getEmail()) && userDTO.getEmail() != null) userModel.setEmail(userDTO.getEmail());
         if (!Objects.equals(userModel.getPassword(), userDTO.getPassword()) && userDTO.getPassword() != null) userModel.setPassword(userDTO.getPassword());
 
@@ -114,5 +120,6 @@ public class UserServiceImpl implements UserService {
         Long accountId = accountService.findAccountIdByUser(user.get());
 
         accountService.performBrlOperation(accountId, value);
+
     }
 }

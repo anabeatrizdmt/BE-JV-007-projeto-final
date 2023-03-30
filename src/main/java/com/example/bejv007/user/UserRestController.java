@@ -1,8 +1,8 @@
 package com.example.bejv007.user;
 
-import com.example.bejv007.account.AccountModel;
 import com.example.bejv007.account.AccountRepository;
 import com.example.bejv007.account.AccountService;
+import com.example.bejv007.user.dto.UserDTO;
 import com.example.bejv007.user.exceptions.EmailDontExistException;
 import com.example.bejv007.user.exceptions.IdNotFoundException;
 import com.example.bejv007.user.repositories.UserJpaRepository;
@@ -13,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
