@@ -6,6 +6,7 @@ import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 @Service
@@ -30,6 +31,9 @@ public class AccountService {
         return repository.findByUser(user).getId();
     }
 
+    public AccountModel findAccountByUserModel(UserModel user) {
+        return repository.findByUser(user);
+    }
     public BigDecimal getTotalBalanceInBtcById(Long id) {
         AccountModel account = repository.findById(id).orElse(null);
 
@@ -76,14 +80,17 @@ public class AccountService {
             return false;
 
         account.setBtcBalance(account.getBtcBalance().subtract(valueInBtc));
-        BigDecimal valueInBrl = blockchainService.getBtcQuote().multiply(valueInBtc);
+        BigDecimal getBtcQuote = BigDecimal.ONE.divide(blockchainService.getBtcQuote(),2, RoundingMode.HALF_UP);
+        BigDecimal valueInBrl = getBtcQuote.multiply(valueInBtc);
         valueInBrl = valueInBrl.setScale(2);
         account.setBrlBalance(account.getBrlBalance().add(valueInBrl));
+        repository.save(account);
         return true;
     }
 
     private Boolean buyBtc(AccountModel account, BigDecimal valueInBtc) {
-        BigDecimal valueInBrl = blockchainService.getBtcQuote().multiply(valueInBtc);
+        BigDecimal getBtcQuote = BigDecimal.ONE.divide(blockchainService.getBtcQuote(),2, RoundingMode.HALF_UP);
+        BigDecimal valueInBrl = getBtcQuote.multiply(valueInBtc);
         valueInBrl = valueInBrl.setScale(2);
 
         if (account.getBrlBalance().compareTo(valueInBrl) < 0)
@@ -91,6 +98,7 @@ public class AccountService {
 
         account.setBrlBalance(account.getBrlBalance().subtract(valueInBrl));
         account.setBtcBalance(account.getBtcBalance().add(valueInBtc));
+        repository.save(account);
         return true;
     }
 
@@ -111,12 +119,13 @@ public class AccountService {
             return false;
 
         account.setBrlBalance(account.getBrlBalance().subtract(value));
+        repository.save(account);
         return true;
     }
 
     private Boolean deposit(AccountModel account, BigDecimal value) {
         account.setBrlBalance(account.getBrlBalance().add(value));
-//        repository.addBrlBalanceToAccount(account.getId(), account.getBrlBalance());
+        repository.save(account);
         return true;
     }
 }

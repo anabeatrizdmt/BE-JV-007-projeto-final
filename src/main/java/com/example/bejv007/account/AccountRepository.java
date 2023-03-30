@@ -13,7 +13,4 @@ import java.math.BigDecimal;
 public interface AccountRepository extends JpaRepository<AccountModel, Long> {
     AccountModel findByUser(UserModel user);
 
-//    @Modifying
-//    @Query("UPDATE AccountModel a SET a.brlBalance = a.brlBalance + :brlBalance WHERE a.id = :id_account")
-//    void addBrlBalanceToAccount(@Param("id_account") Long id, @Param("brlBalance") BigDecimal brlBalance);
 }

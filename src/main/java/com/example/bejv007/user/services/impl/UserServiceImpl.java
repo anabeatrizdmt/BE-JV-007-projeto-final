@@ -112,6 +112,7 @@ public class UserServiceImpl implements UserService {
     public void performBrlOperation(Long id, BigDecimal value) {
         Optional<UserModel> user = repository.findById(id);
         Long accountId = accountService.findAccountIdByUser(user.get());
+
         accountService.performBrlOperation(accountId, value);
     }
 }
