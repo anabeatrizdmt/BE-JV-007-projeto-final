@@ -17,5 +17,6 @@ public class UserRequest {
     private String email;
     @Pattern(regexp = "[\\w\\p{L}.]{5,20}")
     private String password;
+    private RoleENUM role;
 
 }

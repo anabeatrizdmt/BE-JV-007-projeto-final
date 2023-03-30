@@ -3,6 +3,7 @@ package com.example.bejv007.user.services.impl;
 import com.example.bejv007.account.AccountModel;
 import com.example.bejv007.account.AccountRepository;
 import com.example.bejv007.account.AccountService;
+import com.example.bejv007.user.RoleENUM;
 import com.example.bejv007.user.dto.UserDTO;
 import com.example.bejv007.user.UserModel;
 import com.example.bejv007.user.exceptions.IdNotFoundException;
@@ -33,9 +34,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Optional<UserModel> findByEmail() {
-        return Optional.empty();
+    public Optional<UserModel> findByEmailContaining(String email) {
+        return repository.findByEmailContaining(email);
     }
+
+
 
     @Override
     public UserDTO findById(Long id) throws IdNotFoundException {
@@ -46,16 +49,31 @@ public class UserServiceImpl implements IUserService {
 
 
     @Override
-    public UserModel saveUser(UserDTO userDTO) throws Exception {
+    public UserModel saveUserClient(UserDTO userDTO) throws Exception {
         Optional<UserModel> optionalUserModel = repository.findByEmail(userDTO.getEmail());
         if (optionalUserModel.isPresent()) {
             throw new Exception("E-mail já cadastrado");
         }
         UserModel userModel = this.repository.save(UserModel.from(userDTO));
         userModel.setPassword(passwordEncoder().encode(userModel.getPassword()));
+        userModel.setRole(RoleENUM.CLIENT);
         accountService.createAccount(userModel);
         return userModel;
     }
+
+    @Override
+    public UserModel saveUserAdmin(UserDTO userDTO) throws Exception {
+        Optional<UserModel> optionalUserModel = repository.findByEmail(userDTO.getEmail());
+        if (optionalUserModel.isPresent()) {
+            throw new Exception("E-mail já cadastrado");
+        }
+        UserModel userModel = this.repository.save(UserModel.from(userDTO));
+        userModel.setPassword(passwordEncoder().encode(userModel.getPassword()));
+        userModel.setRole(RoleENUM.ADMIN);
+        accountService.createAccount(userModel);
+        return userModel;
+    }
+
 
     @Override
     public UserModel editUser(Long id, UserDTO userDTO) throws Exception {

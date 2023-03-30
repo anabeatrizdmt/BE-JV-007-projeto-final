@@ -4,6 +4,7 @@ import com.example.bejv007.user.repositories.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+@Profile("security")
 @RequiredArgsConstructor
 @Configuration
 public class AppConfig {
@@ -22,7 +24,7 @@ public class AppConfig {
     public UserDetailsService userDetailsService() {
 
         return username ->
-                (UserDetails) userJpaRepository.findByUsername(username)
+                userJpaRepository.findByUsername(username)
                         .orElseThrow(() -> new UsernameNotFoundException("not found"));
 
     }
