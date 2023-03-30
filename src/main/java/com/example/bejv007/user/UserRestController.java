@@ -38,7 +38,7 @@ public class UserRestController {
 
     @GetMapping ("/searchemail/{email}")
     public UserResponse findByEmail(@PathVariable String email) throws EmailDontExistException {
-        Optional<UserModel> optionalUserModel = this.repository.findByEmail(email);
+        Optional<UserModel> optionalUserModel = this.repository.findByEmailContaining(email);
         if (!optionalUserModel.isPresent()) {
             throw new EmailDontExistException();
         }
@@ -49,7 +49,7 @@ public class UserRestController {
     @PutMapping("/edit/{id}")
     public ResponseEntity<UserModel> updateUser(
             @PathVariable("id") Long id,
-            @RequestParam("nome") Optional<String> nome,
+            @RequestParam("name") Optional<String> nome,
             @RequestParam("email") Optional<String> email,
             @RequestParam("password") Optional<String> password) throws Exception {
 
@@ -74,13 +74,13 @@ public class UserRestController {
 
     @PostMapping("/{id}/btc")
     @ResponseStatus(HttpStatus.OK)
-    public void transactBtc(@PathVariable Long id, @RequestBody Double quantity) {
-        userService.transactBtc(id, BigDecimal.valueOf(quantity));
+    public void transactBtc(@PathVariable Long id, @RequestBody TransactionRequest request) {
+        userService.transactBtc(id, BigDecimal.valueOf(request.value()));
     }
 
     @PostMapping("/{id}/brl")
     @ResponseStatus(HttpStatus.OK)
-    public void performBrlOperation(@PathVariable Long id, @RequestBody Double value) {
-        userService.performBrlOperation(id, BigDecimal.valueOf(value));
+    public void performBrlOperation(@PathVariable Long id, @RequestBody TransactionRequest request) {
+        userService.performBrlOperation(id, BigDecimal.valueOf(request.value()));
     }
 }

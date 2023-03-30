@@ -2,6 +2,7 @@ package com.example.bejv007.account;
 
 import com.example.bejv007.blockchain.BlockchainService;
 import com.example.bejv007.user.UserModel;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,35 +26,28 @@ public class AccountService {
        return repository.save(newAccount);
     }
 
-    public Long findAccountIdByUser(Optional<UserModel> user) {
+    public Long findAccountIdByUser(UserModel user) {
         return repository.findByUser(user).getId();
     }
 
     public BigDecimal getTotalBalanceInBtcById(Long id) {
         AccountModel account = repository.findById(id).orElse(null);
 
-        BigDecimal btcBalance = account.getBtcBalance();
-        BigDecimal brlBalance = account.getBrlBalance();
-
-        BigDecimal convertedBalance = btcBalance.add(blockchainService.getBtcQuote().divide(brlBalance));
-
-        return convertedBalance;
+        assert account != null;
+        return account.getBtcBalance();
     }
 
     public BigDecimal getTotalBalanceInBrlById(Long id) {
         AccountModel account = repository.findById(id).orElse(null);
 
-        BigDecimal btcBalance = account.getBtcBalance();
-        BigDecimal brlBalance = account.getBrlBalance();
-
-        BigDecimal convertedBalance = brlBalance.add(blockchainService.getBtcQuote().multiply(btcBalance));
-
-        return convertedBalance;
+        assert account != null;
+        return account.getBrlBalance();
     }
 
     public Boolean deleteAccountById(Long id) {
         AccountModel account = repository.findById(id).orElse(null);
 
+        assert account != null;
         if (account.getBrlBalance().equals(BigDecimal.ZERO) &&
             account.getBtcBalance().equals(BigDecimal.ZERO)) {
 
@@ -122,6 +116,7 @@ public class AccountService {
 
     private Boolean deposit(AccountModel account, BigDecimal value) {
         account.setBrlBalance(account.getBrlBalance().add(value));
+//        repository.addBrlBalanceToAccount(account.getId(), account.getBrlBalance());
         return true;
     }
 }
