@@ -21,8 +21,6 @@ import java.util.Optional;
 public class UserRestController {
 
     private final UserServiceImpl userService;
-    private final AccountService accountService;
-    private final AccountRepository accountRepository;
     private final UserJpaRepository repository;
 
     @PostMapping
@@ -38,7 +36,7 @@ public class UserRestController {
 
     @GetMapping ("/searchemail/{email}")
     public UserResponse findByEmail(@PathVariable String email) throws EmailDontExistException {
-        Optional<UserModel> optionalUserModel = this.repository.findByEmail(email);
+        Optional<UserModel> optionalUserModel = this.repository.findByEmailContaining(email);
         if (!optionalUserModel.isPresent()) {
             throw new EmailDontExistException();
         }
@@ -47,8 +45,16 @@ public class UserRestController {
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<UserModel> updateUser(@PathVariable("id") Long id, @RequestBody @Valid UserRequest userRequest) throws Exception {
-        UserDTO userDTO = UserDTO.from(userRequest);
+    public ResponseEntity<UserModel> updateUser(
+            @PathVariable("id") Long id,
+            @RequestParam("name") Optional<String> nome,
+            @RequestParam("email") Optional<String> email,
+            @RequestParam("password") Optional<String> password) throws Exception {
+
+        UserDTO userDTO = new UserDTO();
+        nome.ifPresent(userDTO::setName);
+        email.ifPresent(userDTO::setEmail);
+        password.ifPresent(userDTO::setPassword);
 
         return new ResponseEntity<>(userService.editUser(id, userDTO), HttpStatus.OK);
     }
@@ -57,5 +63,22 @@ public class UserRestController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void deleteUserById(@PathVariable("id") Long id) throws Exception {
         userService.deleteUser(id);
+    }
+
+    @GetMapping(value = "/{id}", params = "currency")
+    public BigDecimal getBalance(@PathVariable Long id, @RequestParam String currency) {
+        return userService.getBalance(id, currency);
+    }
+
+    @PostMapping("/{id}/btc")
+    @ResponseStatus(HttpStatus.OK)
+    public void transactBtc(@PathVariable Long id, @RequestBody TransactionRequest request) {
+        userService.transactBtc(id, BigDecimal.valueOf(request.value()));
+    }
+
+    @PostMapping("/{id}/brl")
+    @ResponseStatus(HttpStatus.OK)
+    public void performBrlOperation(@PathVariable Long id, @RequestBody TransactionRequest request) {
+        userService.performBrlOperation(id, BigDecimal.valueOf(request.value()));
     }
 }
