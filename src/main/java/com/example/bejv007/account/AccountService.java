@@ -25,7 +25,7 @@ public class AccountService {
        return repository.save(newAccount);
     }
 
-    public Long findAccountIdByUser(Optional<UserModel> user) {
+    public Long findAccountIdByUser(UserModel user) {
         return repository.findByUser(user).getId();
     }
 

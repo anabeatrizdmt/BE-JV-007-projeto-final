@@ -79,9 +79,10 @@ public class UserServiceImpl implements IUserService {
         if (optionalUserModel.isEmpty()) {
             throw new Exception("Usuário não encontrado");
         }
-        AccountModel accountModel = accountRepository.findByUser(optionalUserModel);
+        UserModel userModel = optionalUserModel.get();
+        AccountModel accountModel = accountRepository.findByUser(userModel);
 
-        Long userAccountId = accountService.findAccountIdByUser(optionalUserModel);
+        Long userAccountId = accountService.findAccountIdByUser(userModel);
 
         BigDecimal totalBalanceInBtc = accountModel.getBtcBalance();
         BigDecimal totalBalanceInBrl = accountModel.getBrlBalance();
@@ -91,7 +92,33 @@ public class UserServiceImpl implements IUserService {
 
         accountRepository.delete(accountModel);
 
-        UserModel userModel = optionalUserModel.orElseThrow(() -> new RuntimeException("User not found"));
         this.repository.delete(userModel);
+    }
+
+    @Override
+    public BigDecimal getBalance(Long id, String currency) {
+        Optional<UserModel> user = repository.findById(id);
+        Long accountId = accountService.findAccountIdByUser(user.get());
+        if (currency.equalsIgnoreCase("btc"))
+            return accountService.getTotalBalanceInBtcById(accountId);
+        if (currency.equalsIgnoreCase("brl"))
+            return accountService.getTotalBalanceInBrlById(accountId);
+        throw new RuntimeException("Currency not supported.");
+    }
+
+    @Override
+    public void transactBtc(Long id, BigDecimal quantity) {
+        Optional<UserModel> user = repository.findById(id);
+        Long accountId = accountService.findAccountIdByUser(user.get());
+        accountService.transactBtc(accountId, quantity);
+    }
+
+    @Override
+    public void performBrlOperation(Long id, BigDecimal value) {
+        Optional<UserModel> user = repository.findById(id);
+        Long accountId = accountService.findAccountIdByUser(user.get());
+
+        accountService.performBrlOperation(accountId, value);
+
     }
 }
