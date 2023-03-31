@@ -23,7 +23,7 @@ public interface IUserService {
 
     public void deleteUser(Long id) throws Exception;
 
-    BigDecimal getBalance(Long id, String currency);
+    BigDecimal getBalance(Long id, String currency) throws IdNotFoundException;
 
     void transactBtc(Long id, BigDecimal quantity) throws IdNotFoundException;
 

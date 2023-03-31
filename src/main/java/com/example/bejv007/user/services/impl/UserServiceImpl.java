@@ -118,7 +118,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public BigDecimal getBalance(Long id, String currency) {
+    public BigDecimal getBalance(Long id, String currency) throws IdNotFoundException {
         Optional<UserModel> user = repository.findById(id);
         Long accountId = accountService.findAccountIdByUser(user.get());
         if (currency.equalsIgnoreCase("btc"))

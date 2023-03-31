@@ -34,10 +34,12 @@ public class AccountService {
         return repository.findByUser(user);
     }
 
-    public BigDecimal getTotalBalanceInBtcById(Long id) {
-        AccountModel account = repository.findById(id).orElse(null);
+    public BigDecimal getTotalBalanceInBtcById(Long id) throws IdNotFoundException {
+        AccountModel account = repository.findById(id).orElseThrow(IdNotFoundException::new);
 
         assert account != null;
+        BigDecimal test = account.getBtcBalance();
+        System.out.println(test);
         return account.getBtcBalance();
     }
 
@@ -80,18 +82,19 @@ public class AccountService {
             return false;
 
         account.setBtcBalance(account.getBtcBalance().subtract(valueInBtc));
-        BigDecimal getBtcQuote = BigDecimal.ONE.divide(blockchainService.getBtcQuote(), 2, RoundingMode.HALF_UP);
+        BigDecimal getBtcQuote = BigDecimal.ONE.divide(blockchainService.getBtcQuote(), 10, RoundingMode.HALF_UP);
         BigDecimal valueInBrl = getBtcQuote.multiply(valueInBtc);
-        valueInBrl = valueInBrl.setScale(2);
+        // valueInBrl = valueInBrl.setScale(2);
         account.setBrlBalance(account.getBrlBalance().add(valueInBrl));
         repository.save(account);
         return true;
     }
 
     private Boolean buyBtc(AccountModel account, BigDecimal valueInBtc) {
-        BigDecimal getBtcQuote = BigDecimal.ONE.divide(blockchainService.getBtcQuote(), 2, RoundingMode.HALF_UP);
+        BigDecimal getBtcQuote = BigDecimal.ONE.divide(blockchainService.getBtcQuote(), 10, RoundingMode.HALF_UP);
         BigDecimal valueInBrl = getBtcQuote.multiply(valueInBtc);
-        valueInBrl = valueInBrl.setScale(2);
+
+        // valueInBrl = valueInBrl.setScale(2);
 
         if (account.getBrlBalance().compareTo(valueInBrl) < 0)
             return false;

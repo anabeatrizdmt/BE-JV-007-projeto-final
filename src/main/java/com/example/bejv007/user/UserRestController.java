@@ -22,8 +22,10 @@ public class UserRestController {
 
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRequest userRequest) throws Exception {
+
         UserModel userModel = userService.saveUserClient(mapper.userRequestToUserDTO(userRequest));
-        return new ResponseEntity<>(mapper.userModelToUserResponse(userModel),HttpStatus.CREATED);
+
+        return new ResponseEntity<>(mapper.userModelToUserResponse(userModel), HttpStatus.CREATED);
     }
 
 }

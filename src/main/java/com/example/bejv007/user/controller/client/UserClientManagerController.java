@@ -19,7 +19,7 @@ public class UserClientManagerController {
     private final UserServiceImpl userService;
 
     @GetMapping(value = "/{id}", params = "currency")
-    public BigDecimal getBalance(@PathVariable Long id, @RequestParam String currency) {
+    public BigDecimal getBalance(@PathVariable Long id, @RequestParam String currency) throws IdNotFoundException {
         return userService.getBalance(id, currency);
     }
 
