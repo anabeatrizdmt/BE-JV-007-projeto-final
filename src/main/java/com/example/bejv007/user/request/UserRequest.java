@@ -1,5 +1,6 @@
-package com.example.bejv007.user;
+package com.example.bejv007.user.request;
 
+import com.example.bejv007.user.RoleENUM;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;

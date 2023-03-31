@@ -1,13 +1,12 @@
 package com.example.bejv007.user.controller.admin;
 
+import com.example.bejv007.mapper.UserMapper;
 import com.example.bejv007.user.UserModel;
-import com.example.bejv007.user.UserRequest;
 import com.example.bejv007.user.UserResponse;
 import com.example.bejv007.user.dto.UserDTO;
 import com.example.bejv007.user.exceptions.EmailDontExistException;
 import com.example.bejv007.user.exceptions.IdNotFoundException;
 import com.example.bejv007.user.services.impl.UserServiceImpl;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserAdminManagerController {
 
+    private final UserMapper mapper;
     private final UserServiceImpl userService;
 
     @GetMapping ("/searchemail/{email}")
@@ -30,13 +30,13 @@ public class UserAdminManagerController {
         if (optionalUserModel.isEmpty()) {
             throw new EmailDontExistException();
         }
-        return UserModel.userModelToUserResponse(optionalUserModel.get());
+        return mapper.userModelToUserResponse(optionalUserModel.get());
     }
 
     @GetMapping("/{id}")
     public UserResponse findById (@PathVariable("id") Long id) throws IdNotFoundException {
         UserDTO userDTO =   userService.findById(id);
-        return UserResponse.from(userDTO);
+        return mapper.userDtoToUserResponse(userDTO);
     }
 
     @PutMapping("/edit/{id}")

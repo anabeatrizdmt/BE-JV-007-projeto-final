@@ -36,13 +36,7 @@ public class UserModel implements UserDetails {
         this.password = password;
     }
 
-    public static UserModel from(UserDTO userDTO) {
-        return new UserModel(userDTO.getUsername(), userDTO.getEmail(), userDTO.getPassword());
-    }
 
-    public static UserResponse userModelToUserResponse(UserModel userModel){
-        return new UserResponse(userModel.getUsername(), userModel.getEmail());
-    }
 
 
     @Override

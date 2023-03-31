@@ -1,8 +1,9 @@
 package com.example.bejv007.user.controller.admin;
 
+import com.example.bejv007.mapper.UserMapper;
 import com.example.bejv007.user.UserModel;
-import com.example.bejv007.user.UserRequest;
-import com.example.bejv007.user.dto.UserDTO;
+import com.example.bejv007.user.UserResponse;
+import com.example.bejv007.user.request.UserRequest;
 import com.example.bejv007.user.services.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class UserAdminRestController {
     private final UserServiceImpl userService;
+    private final UserMapper mapper;
 
     @PostMapping
-    public ResponseEntity<UserModel> createUser(@RequestBody @Valid UserRequest userRequest) throws Exception {
-        return new ResponseEntity<>(userService.saveUserAdmin(UserDTO.from(userRequest)), HttpStatus.CREATED );
+    public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRequest userRequest) throws Exception {
+        UserModel userModel = userService.saveUserAdmin(mapper.userRequestToUserDTO(userRequest));
+        return new ResponseEntity<>(mapper.userModelToUserResponse(userModel), HttpStatus.CREATED );
     }
 }

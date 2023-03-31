@@ -1,6 +1,7 @@
 package com.example.bejv007.user;
 
-import com.example.bejv007.user.dto.UserDTO;
+import com.example.bejv007.mapper.UserMapper;
+import com.example.bejv007.user.request.UserRequest;
 import com.example.bejv007.user.services.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +18,12 @@ import org.springframework.web.bind.annotation.*;
 public class UserRestController {
 
     private final UserServiceImpl userService;
+    private final UserMapper mapper;
 
     @PostMapping
-    public ResponseEntity<UserModel> createUser(@RequestBody @Valid UserRequest userRequest) throws Exception {
-        return new ResponseEntity<>(userService.saveUserClient(UserDTO.from(userRequest)),HttpStatus.CREATED );
+    public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRequest userRequest) throws Exception {
+        UserModel userModel = userService.saveUserClient(mapper.userRequestToUserDTO(userRequest));
+        return new ResponseEntity<>(mapper.userModelToUserResponse(userModel),HttpStatus.CREATED);
     }
 
 }

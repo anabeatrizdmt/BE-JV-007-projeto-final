@@ -2,6 +2,7 @@ package com.example.bejv007.account;
 
 import com.example.bejv007.blockchain.BlockchainService;
 import com.example.bejv007.user.UserModel;
+import com.example.bejv007.user.exceptions.IdNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -62,11 +63,11 @@ public class AccountService {
         return false;
     }
 
-    public Boolean transactBtc(Long id, BigDecimal value) {
+    public Boolean transactBtc(Long id, BigDecimal value) throws IdNotFoundException {
         if (value.scale() > 8 || value.scale() < -8)
             throw new IllegalArgumentException("Não é possível transacionar frações de satoshis.");
 
-        AccountModel account = repository.findById(id).orElse(null);
+        AccountModel account = repository.findById(id).orElseThrow(IdNotFoundException::new);
 
         if (value.compareTo(BigDecimal.ZERO) < 0)
             return sellBtc(account, value.abs());
@@ -101,11 +102,11 @@ public class AccountService {
         return true;
     }
 
-    public Boolean performBrlOperation(Long id, BigDecimal value) {
+    public Boolean performBrlOperation(Long id, BigDecimal value) throws IdNotFoundException {
         if (value.scale() > 2 || value.scale() < -2)
             throw new IllegalArgumentException("Não é possível transacionar frações de centavos.");
 
-        AccountModel account = repository.findById(id).orElse(null);
+        AccountModel account = repository.findById(id).orElseThrow(IdNotFoundException::new);
 
         if (value.compareTo(BigDecimal.ZERO) < 0)
             return withdraw(account, value.abs());

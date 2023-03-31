@@ -25,7 +25,7 @@ public interface IUserService {
 
     BigDecimal getBalance(Long id, String currency);
 
-    void transactBtc(Long id, BigDecimal quantity);
+    void transactBtc(Long id, BigDecimal quantity) throws IdNotFoundException;
 
-    void performBrlOperation(Long id, BigDecimal value);
+    void performBrlOperation(Long id, BigDecimal value) throws IdNotFoundException;
 }
