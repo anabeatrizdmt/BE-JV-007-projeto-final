@@ -4,6 +4,7 @@ import com.example.bejv007.mapper.UserMapper;
 import com.example.bejv007.user.UserModel;
 import com.example.bejv007.user.UserResponse;
 import com.example.bejv007.user.dto.UserDTO;
+import com.example.bejv007.user.exceptions.account.CurrencyNotSupportedException;
 import com.example.bejv007.user.exceptions.user.EmailDontExistException;
 import com.example.bejv007.user.exceptions.user.IdNotFoundException;
 import com.example.bejv007.user.services.impl.UserServiceImpl;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @RestController
@@ -35,7 +37,7 @@ public class UserAdminManagerController {
 
     @GetMapping("/{id}")
     public UserResponse findById (@PathVariable("id") Long id) throws IdNotFoundException {
-        UserDTO userDTO =   userService.findById(id);
+        UserDTO userDTO = userService.findById(id);
         return mapper.userDtoToUserResponse(userDTO);
     }
 
@@ -52,6 +54,11 @@ public class UserAdminManagerController {
         password.ifPresent(userDTO::setPassword);
 
         return new ResponseEntity<>(userService.editUser(id, userDTO), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "balance/{id}", params = "currency")
+    public BigDecimal getBalance(@PathVariable Long id, @RequestParam String currency) throws IdNotFoundException, CurrencyNotSupportedException {
+        return userService.getBalance(id, currency);
     }
 
     @DeleteMapping("/delete/{id}")
