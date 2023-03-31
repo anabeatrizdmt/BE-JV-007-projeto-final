@@ -47,6 +47,7 @@ public class SecurityConfig {
                                 .requestMatchers(AUTH_ALLOWLIST).permitAll()
                                 .requestMatchers( "/auth/login").permitAll()
                                 .requestMatchers( "/users").permitAll()
+                                .requestMatchers( "/admin/caminhoSecreto").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .headers().frameOptions().disable()

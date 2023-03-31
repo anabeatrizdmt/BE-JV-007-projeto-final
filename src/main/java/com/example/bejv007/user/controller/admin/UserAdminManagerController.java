@@ -24,11 +24,6 @@ public class UserAdminManagerController {
 
     private final UserServiceImpl userService;
 
-    @PostMapping
-    public ResponseEntity<UserModel> createUser(@RequestBody @Valid UserRequest userRequest) throws Exception {
-        return new ResponseEntity<>(userService.saveUserAdmin(UserDTO.from(userRequest)), HttpStatus.CREATED );
-    }
-
     @GetMapping ("/searchemail/{email}")
     public UserResponse findByEmail(@PathVariable String email) throws EmailDontExistException {
         Optional<UserModel> optionalUserModel = userService.findByEmailContaining(email);
