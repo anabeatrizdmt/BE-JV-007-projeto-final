@@ -3,6 +3,7 @@ package com.example.bejv007.user.services.impl;
 import com.example.bejv007.account.AccountModel;
 import com.example.bejv007.account.AccountRepository;
 import com.example.bejv007.account.AccountService;
+import com.example.bejv007.mapper.UserMapper;
 import com.example.bejv007.user.RoleENUM;
 import com.example.bejv007.user.dto.UserDTO;
 import com.example.bejv007.user.UserModel;
@@ -25,6 +26,8 @@ public class UserServiceImpl implements IUserService {
     private final AccountService accountService;
     private final AccountRepository accountRepository;
 
+    private final UserMapper mapper;
+
     private BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
@@ -43,7 +46,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDTO findById(Long id) throws IdNotFoundException {
        UserModel userFound = repository.findById(id).orElseThrow(IdNotFoundException::new);
-       return UserDTO.userModelToUserDto(userFound);
+       return mapper.userModelToUserDTO(userFound);
     }
 
 
@@ -54,7 +57,7 @@ public class UserServiceImpl implements IUserService {
         if (optionalUserModel.isPresent()) {
             throw new Exception("E-mail já cadastrado");
         }
-        UserModel userModel = this.repository.save(UserModel.from(userDTO));
+        UserModel userModel = this.repository.save(mapper.userDtoToUserModel(userDTO));
         userModel.setPassword(passwordEncoder().encode(userModel.getPassword()));
         userModel.setRole(RoleENUM.CLIENT);
         accountService.createAccount(userModel);
@@ -67,7 +70,7 @@ public class UserServiceImpl implements IUserService {
         if (optionalUserModel.isPresent()) {
             throw new Exception("E-mail já cadastrado");
         }
-        UserModel userModel = this.repository.save(UserModel.from(userDTO));
+        UserModel userModel = this.repository.save(mapper.userDtoToUserModel(userDTO));
         userModel.setPassword(passwordEncoder().encode(userModel.getPassword()));
         userModel.setRole(RoleENUM.ADMIN);
         accountService.createAccount(userModel);
@@ -115,7 +118,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public BigDecimal getBalance(Long id, String currency) {
+    public BigDecimal getBalance(Long id, String currency) throws IdNotFoundException {
         Optional<UserModel> user = repository.findById(id);
         Long accountId = accountService.findAccountIdByUser(user.get());
         if (currency.equalsIgnoreCase("btc"))
@@ -126,14 +129,14 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public void transactBtc(Long id, BigDecimal quantity) {
+    public void transactBtc(Long id, BigDecimal quantity) throws IdNotFoundException {
         Optional<UserModel> user = repository.findById(id);
         Long accountId = accountService.findAccountIdByUser(user.get());
         accountService.transactBtc(accountId, quantity);
     }
 
     @Override
-    public void performBrlOperation(Long id, BigDecimal value) {
+    public void performBrlOperation(Long id, BigDecimal value) throws IdNotFoundException {
         Optional<UserModel> user = repository.findById(id);
         Long accountId = accountService.findAccountIdByUser(user.get());
 

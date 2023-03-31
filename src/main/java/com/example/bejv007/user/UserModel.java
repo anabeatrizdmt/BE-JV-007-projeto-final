@@ -22,6 +22,7 @@ public class UserModel implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     private String username;
     private String email;
     private String password;
@@ -29,21 +30,11 @@ public class UserModel implements UserDetails {
     @Enumerated(EnumType.STRING)
     private RoleENUM role;
 
-
     public UserModel(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
     }
-
-    public static UserModel from(UserDTO userDTO) {
-        return new UserModel(userDTO.getUsername(), userDTO.getEmail(), userDTO.getPassword());
-    }
-
-    public static UserResponse userModelToUserResponse(UserModel userModel){
-        return new UserResponse(userModel.getUsername(), userModel.getEmail());
-    }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

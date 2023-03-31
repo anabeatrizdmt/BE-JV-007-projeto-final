@@ -2,6 +2,7 @@ package com.example.bejv007.account;
 
 import com.example.bejv007.blockchain.BlockchainService;
 import com.example.bejv007.user.UserModel;
+import com.example.bejv007.user.exceptions.IdNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -33,10 +34,12 @@ public class AccountService {
         return repository.findByUser(user);
     }
 
-    public BigDecimal getTotalBalanceInBtcById(Long id) {
-        AccountModel account = repository.findById(id).orElse(null);
+    public BigDecimal getTotalBalanceInBtcById(Long id) throws IdNotFoundException {
+        AccountModel account = repository.findById(id).orElseThrow(IdNotFoundException::new);
 
         assert account != null;
+        BigDecimal test = account.getBtcBalance();
+        System.out.println(test);
         return account.getBtcBalance();
     }
 
@@ -62,11 +65,11 @@ public class AccountService {
         return false;
     }
 
-    public Boolean transactBtc(Long id, BigDecimal value) {
+    public Boolean transactBtc(Long id, BigDecimal value) throws IdNotFoundException {
         if (value.scale() > 8 || value.scale() < -8)
             throw new IllegalArgumentException("Não é possível transacionar frações de satoshis.");
 
-        AccountModel account = repository.findById(id).orElse(null);
+        AccountModel account = repository.findById(id).orElseThrow(IdNotFoundException::new);
 
         if (value.compareTo(BigDecimal.ZERO) < 0)
             return sellBtc(account, value.abs());
@@ -79,18 +82,19 @@ public class AccountService {
             return false;
 
         account.setBtcBalance(account.getBtcBalance().subtract(valueInBtc));
-        BigDecimal getBtcQuote = BigDecimal.ONE.divide(blockchainService.getBtcQuote(), 2, RoundingMode.HALF_UP);
+        BigDecimal getBtcQuote = BigDecimal.ONE.divide(blockchainService.getBtcQuote(), 10, RoundingMode.HALF_UP);
         BigDecimal valueInBrl = getBtcQuote.multiply(valueInBtc);
-        valueInBrl = valueInBrl.setScale(2);
+        // valueInBrl = valueInBrl.setScale(2);
         account.setBrlBalance(account.getBrlBalance().add(valueInBrl));
         repository.save(account);
         return true;
     }
 
     private Boolean buyBtc(AccountModel account, BigDecimal valueInBtc) {
-        BigDecimal getBtcQuote = BigDecimal.ONE.divide(blockchainService.getBtcQuote(), 2, RoundingMode.HALF_UP);
+        BigDecimal getBtcQuote = BigDecimal.ONE.divide(blockchainService.getBtcQuote(), 10, RoundingMode.HALF_UP);
         BigDecimal valueInBrl = getBtcQuote.multiply(valueInBtc);
-        valueInBrl = valueInBrl.setScale(2);
+
+        // valueInBrl = valueInBrl.setScale(2);
 
         if (account.getBrlBalance().compareTo(valueInBrl) < 0)
             return false;
@@ -101,11 +105,11 @@ public class AccountService {
         return true;
     }
 
-    public Boolean performBrlOperation(Long id, BigDecimal value) {
+    public Boolean performBrlOperation(Long id, BigDecimal value) throws IdNotFoundException {
         if (value.scale() > 2 || value.scale() < -2)
             throw new IllegalArgumentException("Não é possível transacionar frações de centavos.");
 
-        AccountModel account = repository.findById(id).orElse(null);
+        AccountModel account = repository.findById(id).orElseThrow(IdNotFoundException::new);
 
         if (value.compareTo(BigDecimal.ZERO) < 0)
             return withdraw(account, value.abs());

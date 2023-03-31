@@ -1,4 +1,4 @@
-package com.example.bejv007.user;
+package com.example.bejv007.user.request;
 
 import lombok.*;
 
