@@ -1,4 +1,4 @@
-package com.example.bejv007.user.exceptions;
+package com.example.bejv007.user.exceptions.user;
 
 import com.example.bejv007.user.request.ErrorMessage;
 import org.springframework.http.HttpStatus;
@@ -29,6 +29,12 @@ public class UserExceptionsHandler {
     @ExceptionHandler(EmailDontExistException.class)
     public ResponseEntity<ErrorMessage> handleEmailDontExistException(Exception ex) {
         ErrorMessage errorResponse = new ErrorMessage("Nenhum email encontrado.", HttpStatus.OK.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.OK);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorMessage> handleUserNotFoundException(Exception ex) {
+        ErrorMessage errorResponse = new ErrorMessage("Usuário não encontrado", HttpStatus.OK.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.OK);
     }
 }
