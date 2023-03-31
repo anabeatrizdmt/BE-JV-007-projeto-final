@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table (name = "db_account")
+
 public class AccountModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

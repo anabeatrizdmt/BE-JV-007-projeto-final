@@ -1,15 +1,13 @@
 package com.example.bejv007.user.auth;
 
-import com.example.bejv007.system.JwtAuthConfig;
 import com.example.bejv007.user.UserModel;
 import com.example.bejv007.user.repositories.UserJpaRepository;
-import com.example.bejv007.user.services.impl.JwtServiceImpl;
+import com.example.bejv007.user.services.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,7 +18,7 @@ public class AuthenticationController {
 
     private final UserJpaRepository userJpaRepository;
     private final AuthenticationManager authenticationManager;
-    private final JwtServiceImpl jwtService;
+    private final JwtService jwtService;
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
@@ -31,6 +29,5 @@ public class AuthenticationController {
         String token = jwtService.createToken(user);
         return  new AuthenticationResponse(user.getId(), token);
     }
-
 
 }

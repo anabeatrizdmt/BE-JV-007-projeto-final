@@ -11,23 +11,17 @@ import java.util.Optional;
 @Service
 public interface IUserService {
     public List<UserModel> findAll();
-    public Optional<UserModel> findByEmail();
+    public Optional<UserModel> findByEmailContaining(String email);
 
     public UserDTO findById(Long id) throws IdNotFoundException;
 
 
-    public UserModel saveUser(UserDTO userDTO) throws Exception;
+    public UserModel    saveUserClient(UserDTO userDTO) throws Exception;
+    public UserModel saveUserAdmin(UserDTO userDTO) throws Exception;
 
     public UserModel editUser(Long id, UserDTO userDTO) throws Exception;
 
     public void deleteUser(Long id) throws Exception;
-
-    BigDecimal getBalance(Long id, String currency);
-
-    void transactBtc(Long id, BigDecimal quantity);
-
-    void performBrlOperation(Long id, BigDecimal value);
-
 
     BigDecimal getBalance(Long id, String currency);
 

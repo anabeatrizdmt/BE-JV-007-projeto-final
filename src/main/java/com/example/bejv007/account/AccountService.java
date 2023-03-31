@@ -2,12 +2,10 @@ package com.example.bejv007.account;
 
 import com.example.bejv007.blockchain.BlockchainService;
 import com.example.bejv007.user.UserModel;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Optional;
 
 @Service
 public class AccountService {
@@ -20,11 +18,11 @@ public class AccountService {
     }
 
     public AccountModel createAccount(UserModel newUser) {
-       AccountModel newAccount = new AccountModel();
-       newAccount.setBrlBalance(BigDecimal.ZERO);
-       newAccount.setBtcBalance(BigDecimal.ZERO);
-       newAccount.setUser(newUser);
-       return repository.save(newAccount);
+        AccountModel newAccount = new AccountModel();
+        newAccount.setBrlBalance(BigDecimal.ZERO);
+        newAccount.setBtcBalance(BigDecimal.ZERO);
+        newAccount.setUser(newUser);
+        return repository.save(newAccount);
     }
 
     public Long findAccountIdByUser(UserModel user) {
@@ -34,6 +32,7 @@ public class AccountService {
     public AccountModel findAccountByUserModel(UserModel user) {
         return repository.findByUser(user);
     }
+
     public BigDecimal getTotalBalanceInBtcById(Long id) {
         AccountModel account = repository.findById(id).orElse(null);
 
@@ -53,7 +52,7 @@ public class AccountService {
 
         assert account != null;
         if (account.getBrlBalance().equals(BigDecimal.ZERO) &&
-            account.getBtcBalance().equals(BigDecimal.ZERO)) {
+                account.getBtcBalance().equals(BigDecimal.ZERO)) {
 
             // TODO: Also delete user
             repository.deleteById(id);
@@ -80,7 +79,7 @@ public class AccountService {
             return false;
 
         account.setBtcBalance(account.getBtcBalance().subtract(valueInBtc));
-        BigDecimal getBtcQuote = BigDecimal.ONE.divide(blockchainService.getBtcQuote(),2, RoundingMode.HALF_UP);
+        BigDecimal getBtcQuote = BigDecimal.ONE.divide(blockchainService.getBtcQuote(), 2, RoundingMode.HALF_UP);
         BigDecimal valueInBrl = getBtcQuote.multiply(valueInBtc);
         valueInBrl = valueInBrl.setScale(2);
         account.setBrlBalance(account.getBrlBalance().add(valueInBrl));
@@ -89,7 +88,7 @@ public class AccountService {
     }
 
     private Boolean buyBtc(AccountModel account, BigDecimal valueInBtc) {
-        BigDecimal getBtcQuote = BigDecimal.ONE.divide(blockchainService.getBtcQuote(),2, RoundingMode.HALF_UP);
+        BigDecimal getBtcQuote = BigDecimal.ONE.divide(blockchainService.getBtcQuote(), 2, RoundingMode.HALF_UP);
         BigDecimal valueInBrl = getBtcQuote.multiply(valueInBtc);
         valueInBrl = valueInBrl.setScale(2);
 

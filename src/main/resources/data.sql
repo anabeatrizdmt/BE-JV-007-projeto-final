@@ -1,2 +1,14 @@
--- insert into user_model values ( 1, 'fulano@ciclano@hotmail.com', true, 'John Doe', '7bo', false);
-select * from user_model;
+select * from db_users
+-- senha: senhaMuitoSegura
+-- insert into db_users (id, email, password, role, username)
+-- values (0,
+--         'anabia@email.com',
+--         '$2a$10$IvLtlGBzXdmRrrl24HruAO6WH2h3IIJ91AYvv8JC3xvSqRO.H2k6C',
+--         'ADMIN',
+--         'ana.beatriz');
+--
+-- insert into db_account (id, brl_balance, btc_balance, user_id)
+-- values (0,
+--         0,
+--         0,
+--         0);

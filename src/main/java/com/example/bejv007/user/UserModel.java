@@ -1,10 +1,8 @@
 package com.example.bejv007.user;
 
 import com.example.bejv007.user.dto.UserDTO;
-import com.example.bejv007.user.entities.RoleEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,14 +12,11 @@ import java.util.Collection;
 import java.util.List;
 
 
-import java.util.Collection;
-
-
-
 @Entity
 @Getter @Setter @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table (name = "db_users")
 public class UserModel implements UserDetails {
 
     @Id
@@ -49,14 +44,6 @@ public class UserModel implements UserDetails {
         return new UserResponse(userModel.getUsername(), userModel.getEmail());
     }
 
-    @ManyToMany
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(
-                    name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "role_id", referencedColumnName = "id"))
-    private Collection<RoleEntity> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
