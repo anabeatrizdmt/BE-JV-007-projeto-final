@@ -59,7 +59,4 @@ public class UserAdminManagerController {
     public void deleteUserById(@PathVariable("id") Long id) throws Exception {
         userService.deleteUser(id);
     }
-
-
-
 }

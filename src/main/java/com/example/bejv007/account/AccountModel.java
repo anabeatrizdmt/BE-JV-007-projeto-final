@@ -25,5 +25,6 @@ public class AccountModel {
     private UserModel user;
 
     private BigDecimal brlBalance;
+    @Column(precision = 16, scale = 8)
     private BigDecimal btcBalance;
 }
