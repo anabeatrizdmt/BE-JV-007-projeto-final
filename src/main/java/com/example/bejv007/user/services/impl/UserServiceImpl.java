@@ -7,7 +7,9 @@ import com.example.bejv007.mapper.UserMapper;
 import com.example.bejv007.user.RoleENUM;
 import com.example.bejv007.user.dto.UserDTO;
 import com.example.bejv007.user.UserModel;
+import com.example.bejv007.user.exceptions.EmailAlreadyExistsException;
 import com.example.bejv007.user.exceptions.IdNotFoundException;
+import com.example.bejv007.user.exceptions.UsernameAlreadyExistsException;
 import com.example.bejv007.user.repositories.UserJpaRepository;
 import com.example.bejv007.user.services.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -53,10 +55,16 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserModel saveUserClient(UserDTO userDTO) throws Exception {
-        Optional<UserModel> optionalUserModel = repository.findByEmail(userDTO.getEmail());
-        if (optionalUserModel.isPresent()) {
-            throw new Exception("E-mail já cadastrado");
+        Optional<UserModel> optionalUserModelUsername = repository.findByUsername(userDTO.getUsername());
+        if (optionalUserModelUsername.isPresent()) {
+            throw new UsernameAlreadyExistsException();
         }
+
+        Optional<UserModel> optionalUserModelEmail = repository.findByEmail(userDTO.getEmail());
+        if (optionalUserModelEmail.isPresent()) {
+            throw new EmailAlreadyExistsException();
+        }
+
         UserModel userModel = this.repository.save(mapper.userDtoToUserModel(userDTO));
         userModel.setPassword(passwordEncoder().encode(userModel.getPassword()));
         userModel.setRole(RoleENUM.CLIENT);

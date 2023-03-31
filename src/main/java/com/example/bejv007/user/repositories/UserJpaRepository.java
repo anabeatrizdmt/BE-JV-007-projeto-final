@@ -11,16 +11,12 @@ import java.util.Optional;
 @Repository
 public interface UserJpaRepository extends JpaRepository<UserModel,Long> {
 
-
     Optional<UserModel> findById(Long id);
 
     Optional<UserModel> findByEmail(String email);
 
-
-
     Optional<UserModel> findByUsername (String username);
 
     Optional<UserModel> findByEmailContaining(String email);
-
 
 }
