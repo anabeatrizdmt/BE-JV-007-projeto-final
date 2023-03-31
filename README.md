@@ -6,12 +6,12 @@ A API permite que usuários realizem transações de compra e venda de Bitcoins 
 
 ## Operações suportadas
 
+- Cadastro 
 - Login
-- Registro
 - Obter valor do portfólio em BRL ou BTC
-- Apagar conta do usuário
-- Comprar ou vender BTC
 - Depositar ou sacar R$
+- Comprar ou vender BTC
+- Apagar conta do usuário
 
 
 ## Endpoints
@@ -82,31 +82,6 @@ Content-Type: application/json
 }
 ```
 
-### - Comprar e vender BTC
-Endpoint: `POST /{id}/btc`
-
-Este endpoint permite que o usuário compre ou venda bitcoins. O número de bitcoins é informado no corpo da requisição. Um valor negativo indica que o usuário deseja vender bitcoins.
-
-O acesso é restrito ao próprio usuário.
-
-Exemplo de requisição:
-```
-POST /client/users/{id}/btc
-Authorization: Bearer <token_de_autorizacao>
-
-Content-Type: application/json
-{
-    "quantity": 0.5
-}
-```
-
-Exemplo de resposta:
-```
-{
-    "message": "A transação foi concluída com sucesso."
-}
-```
-
 ### - Depósitos e saques em BRL
 
 Endpoint: `POST /{id}/brl`
@@ -123,6 +98,31 @@ Authorization: Bearer <token_de_autorizacao>
 Content-Type: application/json
 {
     "value": 100.00
+}
+```
+
+Exemplo de resposta:
+```
+{
+    "message": "A transação foi concluída com sucesso."
+}
+```
+
+### - Comprar e vender BTC
+Endpoint: `POST /{id}/btc`
+
+Este endpoint permite que o usuário compre ou venda bitcoins. O número de bitcoins é informado no corpo da requisição. Um valor negativo indica que o usuário deseja vender bitcoins.
+
+O acesso é restrito ao próprio usuário.
+
+Exemplo de requisição:
+```
+POST /client/users/{id}/btc
+Authorization: Bearer <token_de_autorizacao>
+
+Content-Type: application/json
+{
+    "quantity": 0.5
 }
 ```
 
