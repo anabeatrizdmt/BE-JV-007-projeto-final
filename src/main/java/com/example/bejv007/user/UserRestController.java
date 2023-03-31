@@ -11,10 +11,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -28,28 +28,4 @@ public class UserRestController {
         return new ResponseEntity<>(userService.saveUserClient(UserDTO.from(userRequest)),HttpStatus.CREATED );
     }
 
-
-
-
-
-
-
-
-
-    @GetMapping(value = "/{id}", params = "currency")
-    public BigDecimal getBalance(@PathVariable Long id, @RequestParam String currency) {
-        return userService.getBalance(id, currency);
-    }
-
-    @PostMapping("/{id}/btc")
-    @ResponseStatus(HttpStatus.OK)
-    public void transactBtc(@PathVariable Long id, @RequestBody TransactionRequest request) {
-        userService.transactBtc(id, BigDecimal.valueOf(request.value()));
-    }
-
-    @PostMapping("/{id}/brl")
-    @ResponseStatus(HttpStatus.OK)
-    public void performBrlOperation(@PathVariable Long id, @RequestBody TransactionRequest request) {
-        userService.performBrlOperation(id, BigDecimal.valueOf(request.value()));
-    }
 }
