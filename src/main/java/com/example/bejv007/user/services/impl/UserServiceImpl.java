@@ -7,7 +7,12 @@ import com.example.bejv007.mapper.UserMapper;
 import com.example.bejv007.user.RoleENUM;
 import com.example.bejv007.user.dto.UserDTO;
 import com.example.bejv007.user.UserModel;
-import com.example.bejv007.user.exceptions.IdNotFoundException;
+import com.example.bejv007.user.exceptions.account.CurrencyNotSupportedException;
+import com.example.bejv007.user.exceptions.account.InsuffitientFundsException;
+import com.example.bejv007.user.exceptions.user.EmailAlreadyExistsException;
+import com.example.bejv007.user.exceptions.user.IdNotFoundException;
+import com.example.bejv007.user.exceptions.user.UserNotFoundException;
+import com.example.bejv007.user.exceptions.user.UsernameAlreadyExistsException;
 import com.example.bejv007.user.repositories.UserJpaRepository;
 import com.example.bejv007.user.services.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -53,10 +58,16 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserModel saveUserClient(UserDTO userDTO) throws Exception {
-        Optional<UserModel> optionalUserModel = repository.findByEmail(userDTO.getEmail());
-        if (optionalUserModel.isPresent()) {
-            throw new Exception("E-mail já cadastrado");
+        Optional<UserModel> optionalUserModelUsername = repository.findByUsername(userDTO.getUsername());
+        if (optionalUserModelUsername.isPresent()) {
+            throw new UsernameAlreadyExistsException();
         }
+
+        Optional<UserModel> optionalUserModelEmail = repository.findByEmail(userDTO.getEmail());
+        if (optionalUserModelEmail.isPresent()) {
+            throw new EmailAlreadyExistsException();
+        }
+
         UserModel userModel = this.repository.save(mapper.userDtoToUserModel(userDTO));
         userModel.setPassword(passwordEncoder().encode(userModel.getPassword()));
         userModel.setRole(RoleENUM.CLIENT);
@@ -66,10 +77,16 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserModel saveUserAdmin(UserDTO userDTO) throws Exception {
-        Optional<UserModel> optionalUserModel = repository.findByEmail(userDTO.getEmail());
-        if (optionalUserModel.isPresent()) {
-            throw new Exception("E-mail já cadastrado");
+        Optional<UserModel> optionalUserModelUsername = repository.findByUsername(userDTO.getUsername());
+        if (optionalUserModelUsername.isPresent()) {
+            throw new UsernameAlreadyExistsException();
         }
+
+        Optional<UserModel> optionalUserModelEmail = repository.findByEmail(userDTO.getEmail());
+        if (optionalUserModelEmail.isPresent()) {
+            throw new EmailAlreadyExistsException();
+        }
+
         UserModel userModel = this.repository.save(mapper.userDtoToUserModel(userDTO));
         userModel.setPassword(passwordEncoder().encode(userModel.getPassword()));
         userModel.setRole(RoleENUM.ADMIN);
@@ -81,8 +98,8 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserModel editUser(Long id, UserDTO userDTO) throws Exception {
         Optional<UserModel> optionalUserModel = repository.findById(id);
-        if (!optionalUserModel.isPresent()) {
-            throw new Exception("Usuário não existe");
+        if (optionalUserModel.isEmpty()) {
+            throw new UserNotFoundException();
         }
         UserModel userModel = optionalUserModel.get();
 
@@ -90,16 +107,14 @@ public class UserServiceImpl implements IUserService {
         if (!Objects.equals(userModel.getEmail(), userDTO.getEmail()) && userDTO.getEmail() != null) userModel.setEmail(userDTO.getEmail());
         if (!Objects.equals(userModel.getPassword(), userDTO.getPassword()) && userDTO.getPassword() != null) userModel.setPassword(userDTO.getPassword());
 
-        UserModel UpdatedUserModel = this.repository.save(userModel);
-
-        return UpdatedUserModel;
+        return this.repository.save(userModel);
     }
 
     @Override
     public void deleteUser(Long id) throws Exception {
         Optional<UserModel> optionalUserModel = this.repository.findById(id);
         if (optionalUserModel.isEmpty()) {
-            throw new Exception("Usuário não encontrado");
+            throw new UserNotFoundException();
         }
         UserModel userModel = optionalUserModel.get();
         AccountModel accountModel = accountRepository.findByUser(userModel);
@@ -118,25 +133,28 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public BigDecimal getBalance(Long id, String currency) throws IdNotFoundException {
+    public BigDecimal getBalance(Long id, String currency) throws IdNotFoundException, CurrencyNotSupportedException {
         Optional<UserModel> user = repository.findById(id);
         Long accountId = accountService.findAccountIdByUser(user.get());
+
         if (currency.equalsIgnoreCase("btc"))
             return accountService.getTotalBalanceInBtcById(accountId);
+
         if (currency.equalsIgnoreCase("brl"))
             return accountService.getTotalBalanceInBrlById(accountId);
-        throw new RuntimeException("Currency not supported.");
+
+        throw new CurrencyNotSupportedException();
     }
 
     @Override
-    public void transactBtc(Long id, BigDecimal quantity) throws IdNotFoundException {
+    public void transactBtc(Long id, BigDecimal quantity) throws IdNotFoundException, InsuffitientFundsException {
         Optional<UserModel> user = repository.findById(id);
         Long accountId = accountService.findAccountIdByUser(user.get());
         accountService.transactBtc(accountId, quantity);
     }
 
     @Override
-    public void performBrlOperation(Long id, BigDecimal value) throws IdNotFoundException {
+    public void performBrlOperation(Long id, BigDecimal value) throws IdNotFoundException, InsuffitientFundsException {
         Optional<UserModel> user = repository.findById(id);
         Long accountId = accountService.findAccountIdByUser(user.get());
 

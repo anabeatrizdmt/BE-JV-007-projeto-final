@@ -4,8 +4,8 @@ import com.example.bejv007.mapper.UserMapper;
 import com.example.bejv007.user.UserModel;
 import com.example.bejv007.user.UserResponse;
 import com.example.bejv007.user.dto.UserDTO;
-import com.example.bejv007.user.exceptions.EmailDontExistException;
-import com.example.bejv007.user.exceptions.IdNotFoundException;
+import com.example.bejv007.user.exceptions.user.EmailDontExistException;
+import com.example.bejv007.user.exceptions.user.IdNotFoundException;
 import com.example.bejv007.user.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -59,7 +59,4 @@ public class UserAdminManagerController {
     public void deleteUserById(@PathVariable("id") Long id) throws Exception {
         userService.deleteUser(id);
     }
-
-
-
 }

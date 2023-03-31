@@ -1,6 +1,8 @@
 package com.example.bejv007.user.controller.client;
 
-import com.example.bejv007.user.exceptions.IdNotFoundException;
+import com.example.bejv007.user.exceptions.account.CurrencyNotSupportedException;
+import com.example.bejv007.user.exceptions.account.InsuffitientFundsException;
+import com.example.bejv007.user.exceptions.user.IdNotFoundException;
 import com.example.bejv007.user.request.TransactionRequest;
 import com.example.bejv007.user.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -19,19 +21,19 @@ public class UserClientManagerController {
     private final UserServiceImpl userService;
 
     @GetMapping(value = "/{id}", params = "currency")
-    public BigDecimal getBalance(@PathVariable Long id, @RequestParam String currency) throws IdNotFoundException {
+    public BigDecimal getBalance(@PathVariable Long id, @RequestParam String currency) throws IdNotFoundException, CurrencyNotSupportedException {
         return userService.getBalance(id, currency);
     }
 
     @PostMapping("/{id}/btc")
     @ResponseStatus(HttpStatus.OK)
-    public void transactBtc(@PathVariable Long id, @RequestBody TransactionRequest request) throws IdNotFoundException {
+    public void transactBtc(@PathVariable Long id, @RequestBody TransactionRequest request) throws IdNotFoundException, InsuffitientFundsException {
         userService.transactBtc(id, BigDecimal.valueOf(request.value()));
     }
 
     @PostMapping("/{id}/brl")
     @ResponseStatus(HttpStatus.OK)
-    public void performBrlOperation(@PathVariable Long id, @RequestBody TransactionRequest request) throws IdNotFoundException {
+    public void performBrlOperation(@PathVariable Long id, @RequestBody TransactionRequest request) throws IdNotFoundException, InsuffitientFundsException {
         userService.performBrlOperation(id, BigDecimal.valueOf(request.value()));
     }
 

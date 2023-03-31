@@ -2,7 +2,9 @@ package com.example.bejv007.user.services;
 
 import com.example.bejv007.user.dto.UserDTO;
 import com.example.bejv007.user.UserModel;
-import com.example.bejv007.user.exceptions.IdNotFoundException;
+import com.example.bejv007.user.exceptions.account.CurrencyNotSupportedException;
+import com.example.bejv007.user.exceptions.account.InsuffitientFundsException;
+import com.example.bejv007.user.exceptions.user.IdNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,9 +25,9 @@ public interface IUserService {
 
     public void deleteUser(Long id) throws Exception;
 
-    BigDecimal getBalance(Long id, String currency) throws IdNotFoundException;
+    BigDecimal getBalance(Long id, String currency) throws IdNotFoundException, CurrencyNotSupportedException;
 
-    void transactBtc(Long id, BigDecimal quantity) throws IdNotFoundException;
+    void transactBtc(Long id, BigDecimal quantity) throws IdNotFoundException, InsuffitientFundsException;
 
-    void performBrlOperation(Long id, BigDecimal value) throws IdNotFoundException;
+    void performBrlOperation(Long id, BigDecimal value) throws IdNotFoundException, InsuffitientFundsException;
 }
