@@ -77,14 +77,13 @@ public class AccountService {
         buyBtc(account, value.abs());
     }
 
-    private void sellBtc(AccountModel account, BigDecimal valueInBtc) {
-        if (account.getBtcBalance().compareTo(valueInBtc) < 0)
-            return;
-
+    private void sellBtc(AccountModel account, BigDecimal valueInBtc) throws InsuffitientFundsException {
+        if (account.getBtcBalance().compareTo(valueInBtc) < 0) {
+            throw new InsuffitientFundsException();
+        }
         account.setBtcBalance(account.getBtcBalance().subtract(valueInBtc));
         BigDecimal getBtcQuote = BigDecimal.ONE.divide(blockchainService.getBtcQuote(), 10, RoundingMode.HALF_UP);
         BigDecimal valueInBrl = getBtcQuote.multiply(valueInBtc);
-        // valueInBrl = valueInBrl.setScale(2);
         account.setBrlBalance(account.getBrlBalance().add(valueInBrl));
         repository.save(account);
     }
@@ -92,8 +91,6 @@ public class AccountService {
     private void buyBtc(AccountModel account, BigDecimal valueInBtc) throws InsuffitientFundsException {
         BigDecimal getBtcQuote = BigDecimal.ONE.divide(blockchainService.getBtcQuote(), 10, RoundingMode.HALF_UP);
         BigDecimal valueInBrl = getBtcQuote.multiply(valueInBtc);
-
-        // valueInBrl = valueInBrl.setScale(2);
 
         if (account.getBrlBalance().compareTo(valueInBrl) < 0)
             throw new InsuffitientFundsException();
